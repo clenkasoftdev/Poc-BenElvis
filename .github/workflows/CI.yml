@@ -115,6 +115,7 @@ jobs:
           -backend-config="container_name=$BACKEND_STORAGE_CONTAINER_NAME"
           -backend-config="key=$BACKEND_STORAGE_CONTAINER_KEY"
           -backend-config="subscription_id=$ARM_SUBSCRIPTION_ID"
+          -subscription_id=$ARM_SUBSCRIPTION_ID
       
       - name: Terraform validate
         id: validate
