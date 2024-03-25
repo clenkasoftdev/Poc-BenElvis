@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 
-namespace Clenka.BenElvisPoc.FuncApp.SaveRsvp
+namespace Clenka.BenElvisPoc.FuncApp
 {
     public class SaveRsvp
     {
