@@ -53,7 +53,7 @@ jobs:
         working-directory: ${{ env.FUNCTIONAPP_WORKING_DIRECTORY }}
       
       - name: Publish Function App
-        run: dotnet publish ./${{ env.FUNCTIONAPP_NAME }}.csproj --configuration Release --output ${{ env.FUNCTIONAPP_WORKING_DIRECTORY }}/publish
+        run: dotnet publish **/${{ env.FUNCTIONAPP_NAME }}.csproj --configuration Release --output ./publish
         working-directory: ${{ env.FUNCTIONAPP_WORKING_DIRECTORY }}
       
       - name: Generate Deployment package
