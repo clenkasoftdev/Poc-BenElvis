@@ -34,27 +34,13 @@ jobs:
           dotnet-version: ${{ env.AZURE_FUNCTIONAPP_DOTNET_VERSION }}
 
       - name: Resolve Project Dependencies Using .NET
-        shell: pwsh
-        run: |
-          pushd '${{ env.AZURE_FUNCTIONAPP_WORKING_DIRECTORY }}'
-          dotnet restore
-          popd
+        run: dotnet restore 
+        working-directory: ${{ env.AZURE_FUNCTIONAPP_WORKING_DIRECTORY }}
 
       - name: Build function app
-        run: |
-          pushd '${{ env.AZURE_FUNCTIONAPP_WORKING_DIRECTORY }}/output'
-          dotnet build --configuration Release --output '${{ env.AZURE_FUNCTIONAPP_WORKING_DIRECTORY }}/output'
-          popd
+        run: dotnet build --configuration Release --no-restore
+        working-directory: ${{ env.AZURE_FUNCTIONAPP_WORKING_DIRECTORY }}
 
       - name: Test Azure Function app
-        run: |
-          pushd '${{ env.AZURE_FUNCTIONAPP_WORKING_DIRECTORY }}'
-          dotnet test --no-restore --verbosity normal --filter Category=Unit
-          popd
-
-      - name: Deploy to Azure Function App
-        uses: azure/webapps-deploy@v2
-        id: deploy-funcapp
-        with:
-          app-name: ${{ env.AZURE_FUNCTIONAPP_NAME }}
-          package: '${{ env.AZURE_FUNCTIONAPP_WORKING_DIRECTORY }}/output'
+        run: dotnet test --no-restore --verbosity normal --filter Category=Unit
+        working-directory: ${{ env.AZURE_FUNCTIONAPP_WORKING_DIRECTORY }}
