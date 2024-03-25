@@ -51,4 +51,19 @@ jobs:
       - name: Test Azure Function app
         run: dotnet test --no-restore --verbosity normal --filter Category=Unit
         working-directory: ${{ env.FUNCTIONAPP_WORKING_DIRECTORY }}
-  
+      
+      - name: Publish Function App
+        run: dotnet publish **/${{env.FUNCTIONAPP_NAME}}.csproj --configuration Release --output ${{ env.FUNCTIONAPP_WORKING_DIRECTORY }}/publish
+        working-directory: ${{ env.FUNCTIONAPP_WORKING_DIRECTORY }}
+      
+      - name: Generate Deployment package
+        run: |
+          cd ${{ env.FUNCTIONAPP_WORKING_DIRECTORY }}/publish
+          zip -r functionapp.zip .
+        working-directory: ${{ env.FUNCTIONAPP_WORKING_DIRECTORY }}
+
+      - name: Upload deployment package
+        uses: actions/upload-artifact@v2
+        with:
+          name: functionapp-${{ env.FUNCTIONAPP_NAME }}-deployment-package
+          path: ${{ env.FUNCTIONAPP_WORKING_DIRECTORY }}/publish/${{ env.FUNCTIONAPP_NAME }}.zip
