@@ -11,7 +11,7 @@ on:
   workflow_dispatch:
 env:
     AZURE_FUNCTIONAPP_NAME: 'Clenka.BenElvisPoc.FuncApp'
-    AZURE_WORKING_DIRECTORY: './src'
+    AZURE_FUNCTIONAPP_WORKING_DIRECTORY: './src/FunctionApp/Clenka.BenElvisPoc.FuncApp'
     AZURE_FUNCTIONAPP_DOTNET_VERSION: '8.0.x'
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -36,19 +36,19 @@ jobs:
       - name: Resolve Project Dependencies Using .NET
         shell: pwsh
         run: |
-          pushd '${{ env.AZURE_WORKING_DIRECTORY }}/FunctionApp'
+          pushd '${{ env.AZURE_FUNCTIONAPP_WORKING_DIRECTORY }}'
           dotnet restore
           popd
 
       - name: Build function app
         run: |
-          pushd '${{ env.AZURE_WORKING_DIRECTORY }}/FunctionApp/output'
-          dotnet build --configuration Release --output '${{ env.AZURE_WORKING_DIRECTORY }}/FunctionApp/output'
+          pushd '${{ env.AZURE_FUNCTIONAPP_WORKING_DIRECTORY }}/output'
+          dotnet build --configuration Release --output '${{ env.AZURE_FUNCTIONAPP_WORKING_DIRECTORY }}/output'
           popd
 
       - name: Test Azure Function app
         run: |
-          pushd '${{ env.AZURE_WORKING_DIRECTORY }}/FunctionApp'
+          pushd '${{ env.AZURE_FUNCTIONAPP_WORKING_DIRECTORY }}'
           dotnet test --no-restore --verbosity normal --filter Category=Unit
           popd
 
@@ -57,4 +57,4 @@ jobs:
         id: deploy-funcapp
         with:
           app-name: ${{ env.AZURE_FUNCTIONAPP_NAME }}
-          package: '${{ env.AZURE_WORKING_DIRECTORY }}/FunctionApp/output'
+          package: '${{ env.AZURE_FUNCTIONAPP_WORKING_DIRECTORY }}/output'
