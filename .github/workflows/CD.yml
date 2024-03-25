@@ -32,3 +32,16 @@ jobs:
         run: |
           echo Add other actions to deploy the project.,
           echo test, deploying to main......
+
+      - name: Log in with Azure 
+        uses: azure/login@v1
+        with:
+          creds: '${{ secrets.AZURE_CREDENTIALS }}'
+       
+      - name: Azure CLI script
+        uses: azure/CLI@v1
+        with:
+          azcliversion: 2.57.0
+          inlineScript: |
+            az account show
+            az storage -h
