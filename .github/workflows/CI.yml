@@ -1,36 +1,58 @@
 # This is a basic workflow to help you get started with Actions
-
 name: CI
-
 # Controls when the workflow will run
 on:
   # Triggers the workflow on push or pull request events but only for the "main" branch
   push:
     branches: [ "develop" ]
+    paths:
+      - 'src/**'
+      - 'infra/**'
+      - '.github/workflows/**'
+      
   pull_request:
     branches: [ "main" ]
+    paths:
+      - 'src/**'
+      - 'infra/**'
+      - '.github/workflows/**'
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
-
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+env:
+    FUNCTIONAPP_NAME: 'Clenka.BenElvisPoc.FuncApp'
+    FUNCTIONAPP_WORKING_DIRECTORY: './src/FunctionApp/Clenka.BenElvisPoc.FuncApp'
+    DOTNET_VERSION: '8.0.x'
+    ENVIRONMENT_NAME: 'dev'
+    TERRAFORM_WORKING_DIRECTORY: './infra/terraform'
+  # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
   build:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
-
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it (v4 is the latest version of the action. v3 used Node.js 16 which is deprecated)
       - uses: actions/checkout@v4
+      - name: Log in with Azure
+        uses: azure/login@v1
+        with:
+          creds: '${{ secrets.AZURE_CREDENTIALS }}'
+      
+      - name: Setup Function app .NET Version to ${{ env.DOTNET_VERSION }}
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
 
-      # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: echo Hello, world!
+      - name: Resolve Project Dependencies Using .NET
+        run: dotnet restore 
+        working-directory: ${{ env.FUNCTIONAPP_WORKING_DIRECTORY }}
 
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
-        run: |
-          echo Add other actions to build,
-          echo test, building the project.
+      - name: Build function app
+        run: dotnet build --configuration Release --no-restore
+        working-directory: ${{ env.FUNCTIONAPP_WORKING_DIRECTORY }}
+
+      - name: Test Azure Function app
+        run: dotnet test --no-restore --verbosity normal --filter Category=Unit
+        working-directory: ${{ env.FUNCTIONAPP_WORKING_DIRECTORY }}
