@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34526.213
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Clenka.BenElvisPoc.FuncApp", "Clenka.BenElvisPoc.FuncApp\Clenka.BenElvisPoc.FuncApp.csproj", "{D66898B2-5CF5-480C-B348-A7D52AC1CAE9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Clenka.BenElvisPoc.FuncApp.UnitTests", "Clenka.BenElvisPoc.FuncApp.UnitTests\Clenka.BenElvisPoc.FuncApp.UnitTests.csproj", "{73484B82-607A-47EA-9B34-B3661CE5B603}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D66898B2-5CF5-480C-B348-A7D52AC1CAE9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D66898B2-5CF5-480C-B348-A7D52AC1CAE9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D66898B2-5CF5-480C-B348-A7D52AC1CAE9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D66898B2-5CF5-480C-B348-A7D52AC1CAE9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{73484B82-607A-47EA-9B34-B3661CE5B603}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{73484B82-607A-47EA-9B34-B3661CE5B603}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{73484B82-607A-47EA-9B34-B3661CE5B603}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{73484B82-607A-47EA-9B34-B3661CE5B603}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C78A1113-8A2B-40DA-AA7A-2AFBBBD53B17}
+	EndGlobalSection
+EndGlobal

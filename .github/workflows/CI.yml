@@ -21,7 +21,7 @@ on:
   workflow_dispatch:
 env:
     FUNCTIONAPP_NAME: 'Clenka.BenElvisPoc.FuncApp'
-    FUNCTIONAPP_WORKING_DIRECTORY: './src/FunctionApp/Clenka.BenElvisPoc.FuncApp'
+    FUNCTIONAPP_WORKING_DIRECTORY: './src/FunctionApp/BenElvisPoc'
     DOTNET_VERSION: '8.0.x'
     ENVIRONMENT_NAME: 'dev'
     TERRAFORM_WORKING_DIRECTORY: './infra/terraform'

@@ -2,7 +2,7 @@
   "profiles": {
     "Clenka.BenElvisPoc.FuncApp": {
       "commandName": "Project",
-      "commandLineArgs": "--port 7041",
+      "commandLineArgs": "--port 7086",
       "launchBrowser": false
     }
   }

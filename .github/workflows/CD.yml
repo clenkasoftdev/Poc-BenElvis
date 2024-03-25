@@ -16,7 +16,7 @@ on:
   workflow_dispatch:
 env:
     FUNCTIONAPP_NAME: 'Clenka.BenElvisPoc.FuncApp'
-    FUNCTIONAPP_WORKING_DIRECTORY: './src/FunctionApp/Clenka.BenElvisPoc.FuncApp/Clenka.BenElvisPoc.FuncApp'
+    FUNCTIONAPP_WORKING_DIRECTORY: './src/FunctionApp/BenElvisPoc'
     DOTNET_VERSION: '8.0.x'
     ENVIRONMENT_NAME: 'dev'
     TERRAFORM_WORKING_DIRECTORY: './infra/terraform'
@@ -53,17 +53,16 @@ jobs:
         working-directory: ${{ env.FUNCTIONAPP_WORKING_DIRECTORY }}
       
       - name: Publish Function App
-        run: dotnet publish ${{ env.FUNCTIONAPP_WORKING_DIRECTORY }}/${{ env.FUNCTIONAPP_NAME }}.csproj --configuration Release --output ${{ env.FUNCTIONAPP_WORKING_DIRECTORY }}/publish
+        run: dotnet publish ./${{ env.FUNCTIONAPP_NAME }}.csproj --configuration Release --output ${{ env.FUNCTIONAPP_WORKING_DIRECTORY }}/publish
         working-directory: ${{ env.FUNCTIONAPP_WORKING_DIRECTORY }}
       
       - name: Generate Deployment package
         run: |
-          cd ${{ env.FUNCTIONAPP_WORKING_DIRECTORY }}/publish
-          zip -r ${{ env.FUNCTIONAPP_NAME }}.zip .
-        working-directory: ${{ env.FUNCTIONAPP_WORKING_DIRECTORY }}
+          zip -r ../${{ env.FUNCTIONAPP_NAME }}.zip ./
+        working-directory: ${{ env.FUNCTIONAPP_WORKING_DIRECTORY }}/publish
 
       - name: Upload deployment package
         uses: actions/upload-artifact@v2
         with:
           name: functionapp-deployment-package
-          path: ${{ env.FUNCTIONAPP_WORKING_DIRECTORY }}/publish/${{ env.FUNCTIONAPP_NAME }}.zip
+          path: ${{ env.FUNCTIONAPP_WORKING_DIRECTORY }}/${{ env.FUNCTIONAPP_NAME }}.zip
