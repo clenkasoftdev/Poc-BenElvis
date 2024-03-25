@@ -1,8 +1,8 @@
 {
   "profiles": {
-    "Clenka.BenElvisPoc.Funcapp.SaveRsvp": {
+    "Clenka.BenElvisPoc.FuncApp": {
       "commandName": "Project",
-      "commandLineArgs": "--port 7125",
+      "commandLineArgs": "--port 7041",
       "launchBrowser": false
     }
   }
