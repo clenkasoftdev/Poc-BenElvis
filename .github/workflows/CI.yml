@@ -5,15 +5,27 @@ on:
   # Triggers the workflow on push or pull request events but only for the "main" branch
   push:
     branches: [ "develop" ]
+    paths:
+      - 'src/**'
+      - 'infra/**'
+      - '.github/workflows/**'
+      
   pull_request:
     branches: [ "main" ]
+    paths:
+      - 'src/**'
+      - 'infra/**'
+      - '.github/workflows/**'
+
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 env:
-    AZURE_FUNCTIONAPP_NAME: 'Clenka.BenElvisPoc.FuncApp'
-    AZURE_FUNCTIONAPP_WORKING_DIRECTORY: './src/FunctionApp/Clenka.BenElvisPoc.FuncApp'
-    AZURE_FUNCTIONAPP_DOTNET_VERSION: '8.0.x'
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+    FUNCTIONAPP_NAME: 'Clenka.BenElvisPoc.FuncApp'
+    FUNCTIONAPP_WORKING_DIRECTORY: './src/FunctionApp/Clenka.BenElvisPoc.FuncApp'
+    DOTNET_VERSION: '8.0.x'
+    ENVIRONMENT_NAME: 'dev'
+    TERRAFORM_WORKING_DIRECTORY: './infra/terraform'
+  # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
   build:
@@ -27,20 +39,20 @@ jobs:
         uses: azure/login@v1
         with:
           creds: '${{ secrets.AZURE_CREDENTIALS }}'
-     
-      - name: Setup Function app .NET Version to ${{ env.AZURE_FUNCTIONAPP_DOTNET_VERSION }}
+      
+      - name: Setup Function app .NET Version to ${{ env.DOTNET_VERSION }}
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: ${{ env.AZURE_FUNCTIONAPP_DOTNET_VERSION }}
+          dotnet-version: ${{ env.DOTNET_VERSION }}
 
       - name: Resolve Project Dependencies Using .NET
         run: dotnet restore 
-        working-directory: ${{ env.AZURE_FUNCTIONAPP_WORKING_DIRECTORY }}
+        working-directory: ${{ env.FUNCTIONAPP_WORKING_DIRECTORY }}
 
       - name: Build function app
         run: dotnet build --configuration Release --no-restore
-        working-directory: ${{ env.AZURE_FUNCTIONAPP_WORKING_DIRECTORY }}
+        working-directory: ${{ env.FUNCTIONAPP_WORKING_DIRECTORY }}
 
       - name: Test Azure Function app
         run: dotnet test --no-restore --verbosity normal --filter Category=Unit
-        working-directory: ${{ env.AZURE_FUNCTIONAPP_WORKING_DIRECTORY }}
+        working-directory: ${{ env.FUNCTIONAPP_WORKING_DIRECTORY }}
