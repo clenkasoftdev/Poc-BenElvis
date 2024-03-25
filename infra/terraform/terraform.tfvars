@@ -1,0 +1,8 @@
+resource_group_name ="Poc-BenElvis-RG"
+location = "West Europe"
+funcapp_name = "Clenka.BenElvisPoc.FuncApp"
+storage_account_name = "storpocbernice"
+storage_account_container_name = "pocbernice"
+state_resource_group_name ="Poc-BenElvis-RG"
+state_container = "tfstate"
+state_key= "terraform.tfstate"
