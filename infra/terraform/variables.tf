@@ -28,3 +28,17 @@ variable "state_container_name" {
 variable "state_key" {
   default = "key"
 }
+
+variable "subscription_id" {
+  description = "The Azure subscription ID."
+}
+variable "client_id" {
+  description = "The Azure Service Principal app ID."
+}
+variable "client_secret" {
+  description = "The Azure Service Principal password."
+}
+
+variable "tenant_id" {
+  description = "The Azure Tenant ID."
+}
