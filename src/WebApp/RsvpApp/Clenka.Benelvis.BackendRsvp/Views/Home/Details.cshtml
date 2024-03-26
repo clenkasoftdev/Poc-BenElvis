@@ -1,0 +1,92 @@
+﻿@model Clenka.Benelvis.BackendRsvp.DTOs.RsvpEntityDto
+
+@{
+    ViewData["Title"] = "Details for";
+}
+
+<h1>Details</h1>
+<h5>Entry from @Model.Title @Model.Fname @Model.Lname</h5>
+<div>
+    <h4>RSVPDto</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            Name
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Title) @Html.DisplayFor(model => model.Fname) @Html.DisplayFor(model => model.Lname)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Email)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Email)
+        </dd>
+        <dt class="col-sm-2">
+           Attending
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Attendance)
+        </dd>
+        <dt class="col-sm-2">
+            Relationship
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Category)
+        </dd>
+        <dt class="col-sm-2">
+           Got link from
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.LinkChoice)
+        </dd>
+        <dt class="col-sm-2">
+            Link provided by
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.OtherText)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Message)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Message)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Seat)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Seat)
+        </dd>
+
+        <dt class="col-sm-2">
+           Email sent already?
+        </dt>
+        <dd class="col-sm-10">
+            @if (Model.EmailSent)
+            {
+                <span>Yes</span>
+            }
+            else
+            {
+                <span>No</span>
+            }
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Created)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Created)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.LastUpdated)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.LastUpdated)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.RowKey">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

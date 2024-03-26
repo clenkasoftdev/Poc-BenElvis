@@ -22,6 +22,15 @@ variable "storage_account_name" {
 variable "state_storage_account_name" {
   default = "pocstorageaccount"
 }
+
+variable "storage_account_container_name" {
+  default = "poccontainer"
+}
+
+variable "container_name" {
+  default = "container"
+}
+
 variable "state_container_name" {
   default = "container"
 }
@@ -29,16 +38,5 @@ variable "state_key" {
   default = "key"
 }
 
-variable "subscription_id" {
-  description = "The Azure subscription ID."
-}
-variable "client_id" {
-  description = "The Azure Service Principal app ID."
-}
-variable "client_secret" {
-  description = "The Azure Service Principal password."
-}
 
-variable "tenant_id" {
-  description = "The Azure Tenant ID."
-}
+

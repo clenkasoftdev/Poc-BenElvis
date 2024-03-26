@@ -1,0 +1,58 @@
+﻿@model Clenka.Benelvis.BackendRsvp.DTOs.UpdateRsvpEntityDto
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h4>Update Seating Position for @Model.Title @Model.Fname @Model.Lname</h4>
+
+<hr />
+<div class="row">
+    <div class="col-md-4" style="padding-bottom:10px;">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="RowKey" />
+            <input type="hidden" asp-for="Fname" />
+            <input type="hidden" asp-for="Lname" />
+            <div class="form-group" style="padding-bottom:10px;">
+                <label asp-for="Attendance" class="control-label">Attending</label>
+                <!--<input asp-for="Attendance" class="form-control" />-->
+                <select asp-for="Attendance" class="form-control">
+                    <option value="Alone">Alone</option>
+                    <option value="With Partner">With Partner</option>
+                </select>
+                <span asp-validation-for="Attendance" class="text-danger"></span>
+            </div>
+            <div class="form-group" style="padding-bottom:10px;">
+                <label asp-for="Seat" class="control-label"></label>
+                <input asp-for="Seat" class="form-control" />
+                <span asp-validation-for="Seat" class="text-danger"></span>
+            </div>
+            <div class="form-group" style="padding-bottom:10px;">
+                <select asp-for="Title" class="form-control">
+                    <option value="Mr.">Mr.</option>
+                    <option value="Mrs.">Mrs.</option>
+                    <option value="Miss">Miss</option>
+                    <option value="Chief">Chief</option>
+                    <option value="Dr.">Dr.</option>
+                    <option value="Hon.">Hon.</option>
+                </select>
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Update" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
