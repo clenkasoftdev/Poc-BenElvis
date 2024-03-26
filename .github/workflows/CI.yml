@@ -109,12 +109,10 @@ jobs:
         
         run: |
           set -a
-          terraform init \
-          -backend-config="resource_group_name=$BACKEND_RESOURCE_GROUP_NAME" 
+          terraform init -backend-config="resource_group_name=$BACKEND_RESOURCE_GROUP_NAME" -backend-config="subscription_id=$ARM_SUBSCRIPTION_ID"
           -backend-config="storage_account_name=$BACKEND_STORAGE_ACCOUNT_NAME"
           -backend-config="container_name=$BACKEND_STORAGE_CONTAINER_NAME"
-          -backend-config="key=$BACKEND_STORAGE_CONTAINER_KEY"
-          -backend-config="subscription_id=$ARM_SUBSCRIPTION_ID"
+          -backend-config="key=$BACKEND_STORAGE_CONTAINER_KEY"          
           -subscription_id=$ARM_SUBSCRIPTION_ID
       
       - name: Terraform validate
