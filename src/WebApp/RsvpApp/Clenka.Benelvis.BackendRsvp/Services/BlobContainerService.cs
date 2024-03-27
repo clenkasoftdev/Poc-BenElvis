@@ -45,6 +45,7 @@ namespace Clenka.Benelvis.BackendRsvp.Services
             {
                 string blobName = $"{data.RowKey}.pdf";
                 var blobClient = _blobContainerClient.GetBlobClient(blobName);
+                var s = blobClient.Uri.ToString();
                 var response = blobClient.Download();
                 return Task.FromResult(response.Value.Content);
             }
@@ -56,12 +57,28 @@ namespace Clenka.Benelvis.BackendRsvp.Services
 
         }
 
+        public Task<string> GetBlobUrl(RsvpEntity data)
+        {
+            try
+            {
+                string blobName = $"{data.RowKey}.jpg";
+                var blobClient = _blobContainerClient.GetBlobClient(blobName);
+                var s = blobClient.Uri.ToString();
+                return Task.FromResult(s);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error downloading file from blob");
+                return Task.FromResult("error");
+            }
+        }
+
         public Task<string> UploadRsvpBlobAsync(string filePath, RsvpEntity data)
         {
             throw new NotImplementedException();
         }
-
-        public Task<string> UploadRsvpBlobAsync(RsvpEntity data)
+        
+        public Task<string> UploadRsvpBlobAsync(RsvpEntity data, byte[] qrImage = null)
         {
             string retval = "error";
             InvitationModel invitationModel = new InvitationModel()
@@ -100,6 +117,19 @@ namespace Clenka.Benelvis.BackendRsvp.Services
                         retval = "Ok";
                     }
                 }
+
+                //if(qrImage != null)
+                //{
+                //    var qrBlobClient = _blobContainerClient.GetBlobClient($"{invitationModel.Id}.jpg");
+                //    using (var stream = new MemoryStream(qrImage))
+                //    {
+                //        var res = qrBlobClient.Upload(stream, true);
+                //        if (res.GetRawResponse().Status == 201)
+                //        {
+                //            retval = "Ok";
+                //        }
+                //    }
+                //}   
             }
             catch (Exception ex)
             {
@@ -109,5 +139,7 @@ namespace Clenka.Benelvis.BackendRsvp.Services
 
             return Task.FromResult(retval);
         }
+
+
     }
 }

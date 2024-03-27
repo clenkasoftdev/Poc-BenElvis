@@ -26,5 +26,10 @@ namespace Clenka.Benelvis.BackendRsvp.Models
         public DateTime Created { get; set; }
         public DateTime LastUpdated { get; set; }
 
+        public override string ToString()
+        {
+            return $"{Title} {Fname} {Lname} - Seat#{Seat} - Attending as {Attendance}. Ident:{RowKey}";
+        }
+
     }
 }

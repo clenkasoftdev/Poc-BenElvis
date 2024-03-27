@@ -65,9 +65,14 @@
                     <a asp-action="Edit" asp-route-id="@item.RowKey">Edit</a> |
                     <a asp-action="Details" asp-route-id="@item.RowKey">Details</a> |
                     <a asp-action="Delete" asp-route-id="@item.RowKey">Delete</a> |
-                    <a asp-action="GenerateInvitation" asp-route-id="@item.RowKey">Generate Invitation</a> |
-                    <a asp-action="Preview" asp-route-id="@item.RowKey" target="_blank">Preview</a> |
-                    <a asp-action="SendInvitation" asp-route-id="@item.RowKey">Send Response</a>
+                    @if (item.Seat > 0)
+                    {
+                        <a asp-action="Preview" asp-route-id="@item.RowKey" target="_blank">Generate PDF</a><span> | </span>
+
+                        <a asp-action="Preview" asp-route-id="@item.RowKey" target="_blank">Preview</a><span> | </span>
+                    
+                        <a asp-action="SendInvitation" asp-route-id = "@item.RowKey"> Send Response </a>
+                    }
                 </td>
             </tr>
         }

@@ -33,6 +33,7 @@ namespace Clenka.Benelvis.BackendRsvp.Services.PDFService
                     column.Item().AlignCenter().PaddingBottom(5).Text($"Your assigned Table");
                     column.Item().AlignCenter().PaddingBottom(5).Text($"#{Model.Seat}").SemiBold();
 
+
                 });
             
             

@@ -10,6 +10,7 @@ using MimeKit.Cryptography;
 using QuestPDF.Fluent;
 using QuestPDF.Infrastructure;
 using System.Diagnostics;
+using System.IO;
 
 namespace Clenka.Benelvis.BackendRsvp.Controllers
 {
@@ -20,15 +21,17 @@ namespace Clenka.Benelvis.BackendRsvp.Controllers
         private readonly IBlobContainerService _blobContainerService;
         private readonly IMapper _mapper;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IQrCodeService<RsvpEntity> _qrCoderService;
         string username = "";
         //private readonly IInvitationDocument _invitationDocument;
-        public HomeController(ILogger<HomeController> logger, ITableStorageService<RsvpEntity> tableService, IMapper mapper, IHttpContextAccessor httpContextAccessor, IBlobContainerService blobContainerService)
+        public HomeController(ILogger<HomeController> logger, ITableStorageService<RsvpEntity> tableService, IMapper mapper, IHttpContextAccessor httpContextAccessor, IBlobContainerService blobContainerService, IQrCodeService<RsvpEntity> qrCoderService)
         {
             _logger = logger;
             _mapper = mapper;
             _tableService = tableService ?? throw new ArgumentNullException(nameof(tableService));
             _httpContextAccessor = httpContextAccessor;
             _blobContainerService = blobContainerService;
+            _qrCoderService = qrCoderService;
             //    _invitationDocument = invitationDocument;
         }
 
@@ -169,10 +172,15 @@ namespace Clenka.Benelvis.BackendRsvp.Controllers
             }
 
             var data = await _tableService.GetByIdAsync(id);
+
+           
             if (data == null)
             {
                 return NotFound();
             }
+         
+
+            var qrcodeImage = await _qrCoderService.GenerateQrCodeAsync(data);
 
             var result = await _blobContainerService.UploadRsvpBlobAsync(data);
             if (result != "Ok" )
@@ -181,6 +189,16 @@ namespace Clenka.Benelvis.BackendRsvp.Controllers
             }
 
             return RedirectToAction(nameof(Success));
+
+            //string _path = Path.Combine(Server.MapPath("~/UploadedFiles"), "filename");
+            //string path = Server.MapPath("~/Uploads/");
+            //if (!Directory.Exists(path))
+            //{
+            //    Directory.CreateDirectory(path);
+            //}
+
+            //postedFile.SaveAs(path + Path.GetFileName(postedFile.FileName));
+
             //InvitationModel invitationModel = new InvitationModel()
             //{
             //    Id = data.RowKey,
@@ -294,6 +312,8 @@ namespace Clenka.Benelvis.BackendRsvp.Controllers
             }
 
             var data = await _tableService.GetByIdAsync(id);
+
+            //var dec = await _qrCoderService.DecodeQrCodeStreamAsync($"QRCODES/{data.RowKey}.jpg");
 
             var result = await _blobContainerService.DownloadRsvpBlobAsync(data);
             if(result == null)

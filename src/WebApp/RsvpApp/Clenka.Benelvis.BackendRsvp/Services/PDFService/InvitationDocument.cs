@@ -3,6 +3,7 @@ using QuestPDF.Drawing;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
+using SkiaSharp;
 
 namespace Clenka.Benelvis.BackendRsvp.Services.PDFService
 {
@@ -34,6 +35,7 @@ namespace Clenka.Benelvis.BackendRsvp.Services.PDFService
                    x.Span(" / ");
                    x.TotalPages();
                });
+
            });
         }
 
@@ -60,7 +62,10 @@ namespace Clenka.Benelvis.BackendRsvp.Services.PDFService
                     });
                 });
 
-                row.ConstantItem(100).Height(50).Placeholder();
+                row.ConstantItem(100).Height(50).Column(column => {
+                    column.Item().AlignCenter().PaddingTop(5).Text("Ben Weds Elvis");
+                    
+                });
             });
         }
 
@@ -69,7 +74,7 @@ namespace Clenka.Benelvis.BackendRsvp.Services.PDFService
         {
             if (Model.Attendance != "Alone")
             {
-                container.Background(Colors.Grey.Lighten3).Padding(10).Column(column =>
+                container.Background(Colors.Grey.Lighten3).Padding(5).Column(column =>
                 {
                     column.Spacing(5);
                     column.Item().Text("Remarks").FontSize(12);
@@ -83,7 +88,7 @@ namespace Clenka.Benelvis.BackendRsvp.Services.PDFService
             }
             else
             {
-                container.Background(Colors.Grey.Lighten3).Padding(10).Column(column =>
+                container.Background(Colors.Grey.Lighten3).Padding(5).Column(column =>
                 {
                     column.Spacing(5);
                     column.Item().Text("Remarks").FontSize(12);
@@ -99,6 +104,43 @@ namespace Clenka.Benelvis.BackendRsvp.Services.PDFService
            
         }
 
+
+        void ComposeCoupleImage(IContainer container)
+        {
+          // If there is an image in QRCODES folder
+          // container.Image("QRCODES/qr.png").Height(100);
+
+            container.Width(0.8f,Unit.Inch).Padding(2).Column(column =>
+            {
+                column.Item().AlignCenter().PaddingBottom(1).Image($"QRCODES/bernicebgbig.jpg").WithCompressionQuality(ImageCompressionQuality.Medium);
+            });
+
+        }
+
+        void ComposeCoupleImageBig(IContainer container)
+        {
+            // If there is an image in QRCODES folder
+            // container.Image("QRCODES/qr.png").Height(100);
+
+            container.Width(2.5f, Unit.Inch).Padding(2).Column(column =>
+            {
+                column.Item().AlignCenter().PaddingBottom(1).Image($"QRCODES/bernicebgbig.jpg").WithCompressionQuality(ImageCompressionQuality.Medium);
+            });
+
+        }
+
+        void ComposeQrImage(IContainer container)
+        {
+            // If there is an image in QRCODES folder
+            // container.Image("QRCODES/qr.png").Height(100);
+
+            container.Width(1.2f, Unit.Inch).Padding(2).Column(column =>
+            {
+                column.Item().AlignCenter().PaddingBottom(1).Image($"QRCODES/{Model.Id}.jpg").WithCompressionQuality(ImageCompressionQuality.Medium);
+            });
+
+        }
+
         void ComposeContent(IContainer container)
         {
             container.PaddingVertical(40).Column(column =>
@@ -110,11 +152,32 @@ namespace Clenka.Benelvis.BackendRsvp.Services.PDFService
                     row.RelativeItem().Component(new ContentComponent(Model));
                 });
 
-                // TODOcolumn.Item().Element(ComposeTable);
+                column.Item().AlignCenter().PaddingTop(5).Element(ComposeQrImage);               
 
                 if (!string.IsNullOrWhiteSpace(Model.Remarks))
                     column.Item().PaddingTop(25).Element(ComposeRemarks);
+
+                column.Item().AlignCenter().PaddingTop(5).Element(ComposeCoupleImage);
+                column.Item().AlignCenter().PaddingTop(5).Element(ComposeCoupleImageBig);
             });
+        }
+
+        QuestPDF.Infrastructure.Image LoadImageWithTransparency(string fileName, float transparency)
+        {
+            using var originalImage = SKImage.FromEncodedData(fileName);
+
+            using var surface = SKSurface.Create(originalImage.Width, originalImage.Height, SKColorType.Rgba8888, SKAlphaType.Premul);
+            using var canvas = surface.Canvas;
+
+            using var transparencyPaint = new SKPaint
+            {
+                ColorFilter = SKColorFilter.CreateBlendMode(SKColors.White.WithAlpha((byte)(transparency * 255)), SKBlendMode.DstIn)
+            };
+
+            canvas.DrawImage(originalImage, new SKPoint(0, 0), transparencyPaint);
+
+            var encodedImage = surface.Snapshot().Encode(SKEncodedImageFormat.Png, 100).ToArray();
+            return Image.FromBinaryData(encodedImage);
         }
 
         //void ComposeTable(IContainer container)
