@@ -300,8 +300,8 @@ namespace Clenka.Benelvis.BackendRsvp.Controllers
             {
                 return RedirectToAction(nameof(ErrorOccured));
             }
-
-            return File(result, "application/pdf", $"Wedding_Invitation_{data.Lname}.pdf");
+            return File(result, "application/pdf");
+            // return File(result, "application/pdf", $"Wedding_Invitation_{data.Lname}.pdf");
 
         }
         private bool IsAllowed()
