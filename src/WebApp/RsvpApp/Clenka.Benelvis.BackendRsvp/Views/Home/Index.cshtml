@@ -17,9 +17,6 @@
                 Name
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Email)
-            </th>
-            <th>
                 Attending
             </th>
 
@@ -43,9 +40,6 @@
             <tr>
                 <td>
                     @Html.DisplayFor(modelItem => item.Title) @Html.DisplayFor(modelItem => item.Fname) @Html.DisplayFor(modelItem => item.Lname)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Email)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Attendance)
@@ -72,6 +66,7 @@
                     <a asp-action="Details" asp-route-id="@item.RowKey">Details</a> |
                     <a asp-action="Delete" asp-route-id="@item.RowKey">Delete</a> |
                     <a asp-action="GenerateInvitation" asp-route-id="@item.RowKey">Generate Invitation</a> |
+                    <a asp-action="Preview" asp-route-id="@item.RowKey">Preview</a> |
                     <a asp-action="SendInvitation" asp-route-id="@item.RowKey">Send Response</a>
                 </td>
             </tr>

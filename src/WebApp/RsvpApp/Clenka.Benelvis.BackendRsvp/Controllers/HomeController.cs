@@ -6,6 +6,7 @@ using Clenka.Benelvis.BackendRsvp.Services.PDFService;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using MimeKit.Cryptography;
 using QuestPDF.Fluent;
 using QuestPDF.Infrastructure;
 using System.Diagnostics;
@@ -16,16 +17,18 @@ namespace Clenka.Benelvis.BackendRsvp.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly ITableStorageService<RsvpEntity> _tableService;
+        private readonly IBlobContainerService _blobContainerService;
         private readonly IMapper _mapper;
         private readonly IHttpContextAccessor _httpContextAccessor;
         string username = "";
         //private readonly IInvitationDocument _invitationDocument;
-        public HomeController(ILogger<HomeController> logger, ITableStorageService<RsvpEntity> tableService, IMapper mapper, IHttpContextAccessor httpContextAccessor)
+        public HomeController(ILogger<HomeController> logger, ITableStorageService<RsvpEntity> tableService, IMapper mapper, IHttpContextAccessor httpContextAccessor, IBlobContainerService blobContainerService)
         {
             _logger = logger;
             _mapper = mapper;
             _tableService = tableService ?? throw new ArgumentNullException(nameof(tableService));
             _httpContextAccessor = httpContextAccessor;
+            _blobContainerService = blobContainerService;
             //    _invitationDocument = invitationDocument;
         }
 
@@ -170,37 +173,44 @@ namespace Clenka.Benelvis.BackendRsvp.Controllers
             {
                 return NotFound();
             }
-            InvitationModel invitationModel = new InvitationModel()
-            {
-                Id = data.RowKey,
-                Title = data.Title,
-                FirstName = data.Fname,
-                LastName = data.Lname,
-                Seat = data.Seat,
-                Email = data.Email,
-                Attendance = data.Attendance,
-                InvitationText = "You are cordially invited to the wedding of Bernice and Elvis, scheduled to take place on Saturday August 17.2024 in Essen, Germany.",
-                InvitationTitle = "Wedding Invitation",
-                CreatedBy = "Clenkasoft",
-                Remarks = "We shall not be sending any print invitations. Your invitation has been recorded in our system. Just come along with the downloaded version of the invitation in your phone.",
-                IssueDate = DateTime.UtcNow,
-            };
 
-            var  _invitationDocument = new InvitationDocument(invitationModel);
-            byte[] pdf = null;
-            try
+            var result = await _blobContainerService.UploadRsvpBlobAsync(data);
+            if (result != "Ok" )
             {
-                QuestPDF.Settings.License = LicenseType.Community;
-                pdf = _invitationDocument.GeneratePdf();
+                return RedirectToAction(nameof(ErrorOccured));
             }
-            catch(Exception ex)
-            {
-                _logger.LogError(ex, "Error generating PDF");
-                 
-            }
-            
 
-            return File(pdf, "application/pdf",$"Wedding_Invitation_{data.Lname}.pdf");
+            return RedirectToAction(nameof(Success));
+            //InvitationModel invitationModel = new InvitationModel()
+            //{
+            //    Id = data.RowKey,
+            //    Title = data.Title,
+            //    FirstName = data.Fname,
+            //    LastName = data.Lname,
+            //    Seat = data.Seat,
+            //    Email = data.Email,
+            //    Attendance = data.Attendance,
+            //    InvitationText = "You are cordially invited to the wedding of Bernice and Elvis, scheduled to take place on Saturday August 17.2024 in Essen, Germany.",
+            //    InvitationTitle = "Wedding Invitation",
+            //    CreatedBy = "Clenkasoft",
+            //    Remarks = "We shall not be sending any print invitations. Your invitation has been recorded in our system. Just come along with the downloaded version of the invitation in your phone.",
+            //    IssueDate = DateTime.UtcNow,
+            //};
+
+            //var  _invitationDocument = new InvitationDocument(invitationModel);
+            //byte[] pdf = null;
+            //try
+            //{
+            //    QuestPDF.Settings.License = LicenseType.Community;
+            //    pdf = _invitationDocument.GeneratePdf();
+            //}
+            //catch(Exception ex)
+            //{
+            //    _logger.LogError(ex, "Error generating PDF");
+
+            //}
+
+            //return File(pdf, "application/pdf",$"Wedding_Invitation_{data.Lname}.pdf");
         }
 
 
@@ -214,6 +224,7 @@ namespace Clenka.Benelvis.BackendRsvp.Controllers
             }
 
             var data = await _tableService.GetByIdAsync(id);
+           
             var rSVPEntityDto = _mapper.Map<RsvpEntityDto>(data);
             if (rSVPEntityDto == null)
             {
@@ -234,6 +245,11 @@ namespace Clenka.Benelvis.BackendRsvp.Controllers
         }
 
         public IActionResult Login()
+        {
+            return View();
+        }
+
+        public IActionResult ErrorOccured()
         {
             return View();
         }
@@ -260,6 +276,33 @@ namespace Clenka.Benelvis.BackendRsvp.Controllers
         public IActionResult Unauthorized()
         {
             return View();
+        }
+
+        public IActionResult Success()
+        {
+            return View();
+        }
+
+        public async Task<IActionResult> Preview(string id)
+        {
+            // Read file from blobstorage
+            if (!IsAllowed())
+                return RedirectToAction(nameof(Login));
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var data = await _tableService.GetByIdAsync(id);
+
+            var result = await _blobContainerService.DownloadRsvpBlobAsync(data);
+            if(result == null)
+            {
+                return RedirectToAction(nameof(ErrorOccured));
+            }
+
+            return File(result, "application/pdf", $"Wedding_Invitation_{data.Lname}.pdf");
+
         }
         private bool IsAllowed()
         {

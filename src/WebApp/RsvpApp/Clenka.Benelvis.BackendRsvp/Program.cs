@@ -32,6 +32,7 @@ builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
 
 builder.Services.AddSingleton(typeof(ITableStorageService<>), typeof(TableStorageService<>));
+builder.Services.AddSingleton<IBlobContainerService,BlobContainerService>();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
