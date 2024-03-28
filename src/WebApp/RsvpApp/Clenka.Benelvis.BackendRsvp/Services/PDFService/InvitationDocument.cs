@@ -104,6 +104,22 @@ namespace Clenka.Benelvis.BackendRsvp.Services.PDFService
            
         }
 
+        void ComposeFurtherRemarks(IContainer container)
+        {
+
+                container.Background(Colors.Grey.Lighten3).Padding(5).Column(column =>
+                {
+                    column.Spacing(5);
+                    column.Item().Text("Your presence is the greatest gift.....").FontSize(10);
+                    column.Item().Text("");
+                    column.Item().Text("");
+                    column.Item().Text($"Dress Code: Elegant.").FontSize(10);
+                    column.Item().Text($"Color of the day: Green, Peach & Cream White").FontSize(10);
+                });
+           
+
+        }
+
 
         void ComposeCoupleImage(IContainer container)
         {
@@ -152,13 +168,15 @@ namespace Clenka.Benelvis.BackendRsvp.Services.PDFService
                     row.RelativeItem().Component(new ContentComponent(Model));
                 });
 
-                column.Item().AlignCenter().PaddingTop(5).Element(ComposeQrImage);               
+                //column.Item().AlignCenter().PaddingTop(5).Element(ComposeQrImage);
+                column.Item().AlignCenter().PaddingTop(5).Element(ComposeCoupleImage);
 
                 if (!string.IsNullOrWhiteSpace(Model.Remarks))
                     column.Item().PaddingTop(25).Element(ComposeRemarks);
 
-                column.Item().AlignCenter().PaddingTop(5).Element(ComposeCoupleImage);
+               // column.Item().AlignCenter().PaddingTop(5).Element(ComposeCoupleImage);
                 column.Item().AlignCenter().PaddingTop(5).Element(ComposeCoupleImageBig);
+                column.Item().AlignCenter().PaddingTop(5).Element(ComposeFurtherRemarks);
             });
         }
 

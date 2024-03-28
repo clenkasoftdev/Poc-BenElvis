@@ -21,19 +21,30 @@ namespace Clenka.Benelvis.BackendRsvp.Controllers
         private readonly IBlobContainerService _blobContainerService;
         private readonly IMapper _mapper;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly IQrCodeService<RsvpEntity> _qrCoderService;
+        //private readonly IQrCodeService<RsvpEntity> _qrCoderService;
         string username = "";
         //private readonly IInvitationDocument _invitationDocument;
-        public HomeController(ILogger<HomeController> logger, ITableStorageService<RsvpEntity> tableService, IMapper mapper, IHttpContextAccessor httpContextAccessor, IBlobContainerService blobContainerService, IQrCodeService<RsvpEntity> qrCoderService)
+        //public HomeController(ILogger<HomeController> logger, ITableStorageService<RsvpEntity> tableService, IMapper mapper, IHttpContextAccessor httpContextAccessor, IBlobContainerService blobContainerService, IQrCodeService<RsvpEntity> qrCoderService)
+        //{
+        //    _logger = logger;
+        //    _mapper = mapper;
+        //    _tableService = tableService ?? throw new ArgumentNullException(nameof(tableService));
+        //    _httpContextAccessor = httpContextAccessor;
+        //    _blobContainerService = blobContainerService;
+        //    _qrCoderService = qrCoderService;
+        //    //    _invitationDocument = invitationDocument;
+        //}
+        public HomeController(ILogger<HomeController> logger, ITableStorageService<RsvpEntity> tableService, IMapper mapper, IHttpContextAccessor httpContextAccessor, IBlobContainerService blobContainerService)
         {
             _logger = logger;
             _mapper = mapper;
             _tableService = tableService ?? throw new ArgumentNullException(nameof(tableService));
             _httpContextAccessor = httpContextAccessor;
             _blobContainerService = blobContainerService;
-            _qrCoderService = qrCoderService;
+           // _qrCoderService = qrCoderService;
             //    _invitationDocument = invitationDocument;
         }
+
 
 
 
@@ -180,7 +191,7 @@ namespace Clenka.Benelvis.BackendRsvp.Controllers
             }
          
 
-            var qrcodeImage = await _qrCoderService.GenerateQrCodeAsync(data);
+            //var qrcodeImage = await _qrCoderService.GenerateQrCodeAsync(data);
 
             var result = await _blobContainerService.UploadRsvpBlobAsync(data);
             if (result != "Ok" )
